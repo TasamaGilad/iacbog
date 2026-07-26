@@ -1,0 +1,53 @@
+name: Deploy AWS SAA Simulator
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Rebuild and verify static website
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public
+          cat site_chunks/part-*.b64 | base64 --decode > public/index.html
+          echo "eac07f976aa580165b2c25b6b38315f931e17387e32c824fbdd68f0f87506a48  public/index.html" | sha256sum -c -
+          touch public/.nojekyll
+
+          if grep -Eqi 'AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[0-9A-Za-z-]{10,}|(sk|rk)_(live|test)_[0-9A-Za-z]{16,}' public/index.html; then
+            echo "Potential secret detected. Deployment blocked."
+            exit 1
+          fi
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
