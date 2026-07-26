@@ -26,15 +26,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Rebuild and verify static website
+      - name: Rebuild static website
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p public
           cat site_chunks/part-*.b64 | base64 --decode > public/index.html
-          echo "eac07f976aa580165b2c25b6b38315f931e17387e32c824fbdd68f0f87506a48  public/index.html" | sha256sum -c -
+          test -s public/index.html
           touch public/.nojekyll
 
+      - name: Verify website SHA-256
+        shell: bash
+        run: |
+          echo "eac07f976aa580165b2c25b6b38315f931e17387e32c824fbdd68f0f87506a48  public/index.html" | sha256sum -c -
+
+      - name: Scan website for secrets
+        shell: bash
+        run: |
           if grep -Eqi 'AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[0-9A-Za-z-]{10,}|(sk|rk)_(live|test)_[0-9A-Za-z]{16,}' public/index.html; then
             echo "Potential secret detected. Deployment blocked."
             exit 1
