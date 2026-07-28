@@ -3,8 +3,6 @@ name: Deploy AWS SAA Simulator
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -26,35 +24,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Rebuild static website
+      - name: Verify static website and scan for secrets
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p public
-          python - <<'PYCODE'
-          from pathlib import Path
-          import base64
-
-          parts = sorted(Path("site_chunks").glob("part-*.b64"))
-          if len(parts) != 5:
-              raise SystemExit(f"Expected 5 chunks, found {len(parts)}")
-
-          encoded = "".join("".join(path.read_text().split()) for path in parts)
-          decoded = base64.b64decode(encoded, validate=True)
-          Path("public/index.html").write_bytes(decoded)
-          PYCODE
-          test -s public/index.html
-          touch public/.nojekyll
-
-      - name: Verify website SHA-256
-        shell: bash
-        run: |
-          echo "eac07f976aa580165b2c25b6b38315f931e17387e32c824fbdd68f0f87506a48  public/index.html" | sha256sum -c -
-
-      - name: Scan website for secrets
-        shell: bash
-        run: |
-          if grep -Eqi 'AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[0-9A-Za-z-]{10,}|(sk|rk)_(live|test)_[0-9A-Za-z]{16,}' public/index.html; then
+          test -s index.html
+          if grep -Eqi 'AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[0-9A-Za-z-]{10,}|(sk|rk)_(live|test)_[0-9A-Za-z]{16,}' index.html; then
             echo "Potential secret detected. Deployment blocked."
             exit 1
           fi
@@ -67,7 +42,7 @@ jobs:
       - name: Upload website artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
