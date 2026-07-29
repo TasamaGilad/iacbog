@@ -1,1 +1,62 @@
-<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>AWS SAA-C03 Simulator</title><style>html,body{height:100%;margin:0;background:#eef2f7;font-family:Arial,sans-serif}#loading{height:100%;display:grid;place-items:center;color:#233044;font-size:18px}.box{background:white;border-radius:16px;padding:28px 34px;box-shadow:0 12px 35px rgba(31,46,70,.12);text-align:center}.spin{width:34px;height:34px;border:4px solid #e1e7ef;border-top-color:#ff9900;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}small{display:block;margin-top:8px;color:#64748b}</style></head><body><div id="loading"><div class="box"><div class="spin"></div>בודק ומטעין את הגרסה העדכנית ביותר...<small id="version"></small></div></div><script>(async()=>{const fail=e=>{document.getElementById('loading').innerHTML='<div class="box"><b>שגיאה בטעינת האפליקציה</b><small>'+String(e.message||e)+'</small></div>'};try{const stamp=Date.now();const r=await fetch('release.json?t='+stamp,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});if(!r.ok)throw new Error('Release manifest unavailable: '+r.status);const release=await r.json();document.getElementById('version').textContent='גרסה '+release.version+' · '+release.questionCount+' שאלות';window.__APP_CHUNKS=[];for(let i=0;i<release.chunks;i++){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=release.path+'/chunk-'+i+'.js?v='+encodeURIComponent(release.version)+'-'+stamp;s.onload=resolve;s.onerror=()=>reject(new Error('Failed loading chunk '+i));document.head.appendChild(s)})}const b=window.__APP_CHUNKS.join('');if(window.__APP_CHUNKS.length!==release.chunks||!b)throw new Error('Application data incomplete');const u=Uint8Array.from(atob(b),c=>c.charCodeAt(0));const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',u))).map(x=>x.toString(16).padStart(2,'0')).join('');if(h!==release.sha256)throw new Error('Integrity check failed');if(!('DecompressionStream'in window))throw new Error('הדפדפן אינו תומך בפענוח האפליקציה. יש להשתמש ב-Chrome או Edge מעודכן.');const stream=new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'));const text=await new Response(stream).text();document.open();document.write(text);document.close()}catch(e){fail(e)}})();</script></body></html>
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#232f3e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>AWS SAA-C03 Simulator</title>
+<style>
+html,body{height:100%;margin:0;background:#eef2f7;font-family:Arial,sans-serif}#loading{height:100%;display:grid;place-items:center;color:#233044;font-size:18px;padding:16px;box-sizing:border-box}.box{background:white;border-radius:16px;padding:28px 34px;box-shadow:0 12px 35px rgba(31,46,70,.12);text-align:center;max-width:520px}.spin{width:34px;height:34px;border:4px solid #e1e7ef;border-top-color:#ff9900;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}small{display:block;margin-top:8px;color:#64748b;line-height:1.5}@media(max-width:600px){.box{width:100%;padding:24px 18px}}
+</style>
+</head>
+<body>
+<div id="loading"><div class="box"><div class="spin"></div>בודק ומטעין את הגרסה העדכנית ביותר...<small id="version"></small></div></div>
+<script>
+(async()=>{
+const fail=e=>{document.getElementById('loading').innerHTML='<div class="box"><b>שגיאה בטעינת האפליקציה</b><small>'+String(e.message||e)+'</small></div>'};
+const mobileCSS=`
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg)}body{min-width:0!important;overflow-x:hidden}button,.option,.q-dot,.action-card,.domain-card{touch-action:manipulation;-webkit-tap-highlight-color:transparent}.app-shell{min-height:100vh;min-height:100dvh}
+@media(max-width:767px){
+body{min-width:0!important;font-size:16px;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}.app-shell{min-height:100svh;min-height:100dvh}.topbar{height:64px;min-height:64px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));gap:8px}.brand{gap:9px;min-width:0;overflow:hidden}.brand-mark{width:38px;height:38px;flex:0 0 38px;font-size:17px}.brand-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand-sub{display:none}.top-actions{gap:6px;min-width:0}.top-actions .badge{display:none}.top-actions .btn{padding:9px 10px;font-size:13px;white-space:nowrap}.page{padding:14px 12px 28px}.hero{display:block;margin-bottom:18px}.hero-main{padding:21px 18px;border-radius:16px}.hero-main:after{font-size:70px;left:12px}.hero h1{font-size:23px;line-height:1.3}.hero p{font-size:15px;line-height:1.55}.hero-side{width:auto;margin-top:12px;padding:18px;border-radius:16px}.exam-facts{grid-template-columns:1fr 1fr;gap:8px}.fact{padding:10px}.fact strong{font-size:18px}.section-title{align-items:flex-start;gap:8px;margin:22px 0 12px}.section-title h2{font-size:18px}.section-title .muted{font-size:12px;text-align:left}.cards,.domain-grid,.stats-row{grid-template-columns:1fr;gap:10px}.action-card,.domain-card,.stat{padding:16px}.domain-strip{margin:-16px -16px 14px}.stat strong{font-size:23px}.modal-backdrop{place-items:end center;padding:0}.modal{width:100%;max-height:92dvh;overflow-y:auto;border-radius:20px 20px 0 0;padding:20px 16px calc(18px + env(safe-area-inset-bottom))}.choice-row{grid-template-columns:1fr}.modal-actions{display:grid;grid-template-columns:1fr 1fr}.field select{font-size:16px}.quiz-page{height:auto!important;min-height:calc(100svh - 64px);min-height:calc(100dvh - 64px);display:flex;flex-direction:column;background:#e9eef5;overflow:visible}.quiz-info{order:0;display:grid;grid-template-columns:1fr auto;position:sticky;top:64px;z-index:13;overflow:visible;border:0;border-bottom:1px solid var(--line);box-shadow:0 4px 12px rgba(23,32,51,.07)}.quiz-info .info-block{padding:8px 12px;border:0}.quiz-info .info-block:nth-child(2),.quiz-info .keyboard{display:none}.quiz-info .info-block:last-child{display:flex;align-items:center}.quiz-info .info-block:last-child .btn{width:auto!important;padding:9px 12px;font-size:13px}.timer{font-size:22px}.quiz-info .muted{font-size:11px}.quiz-sidebar{order:1;display:block;position:sticky;top:120px;z-index:12;overflow-x:auto;overflow-y:hidden;border:0;border-bottom:1px solid var(--line);background:#fff;-webkit-overflow-scrolling:touch;scrollbar-width:none}.quiz-sidebar::-webkit-scrollbar{display:none}.quiz-sidebar .side-head,.quiz-sidebar .legend{display:none}.palette{display:flex;width:max-content;gap:7px;padding:8px 12px;contain:none}.q-dot{width:40px;height:40px;flex:0 0 40px;font-size:13px}.quiz-main{order:2;overflow:visible;padding:12px 10px 170px}.quiz-card{max-width:none;padding:18px 14px;border-radius:14px;box-shadow:0 5px 18px rgba(31,46,70,.08)}.q-meta{gap:8px;margin-bottom:12px}.q-meta .badge{font-size:10px;padding:6px 8px}.q-meta .muted{font-size:12px}.flag-btn{padding:8px 9px;font-size:12px;white-space:nowrap}.question-text{font-size:18px;line-height:1.55;margin:10px 0 16px}.select-note{font-size:12px}.options{gap:9px}.option{padding:13px 11px;gap:10px;line-height:1.45;min-height:52px}.option-key{width:28px;height:28px;flex-basis:28px}.feedback,.hint-box,.explanation{padding:13px;font-size:14px}.quiz-actions{right:0!important;left:0!important;bottom:0;display:flex;flex-direction:column;gap:7px;padding:9px 10px calc(9px + env(safe-area-inset-bottom));background:rgba(255,255,255,.98)}.action-group{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quiz-actions .btn{min-height:42px;padding:9px 8px;font-size:13px}.result-page{padding:14px 10px calc(24px + env(safe-area-inset-bottom))}.result-hero{padding:18px 14px;display:block;border-radius:16px}.score-ring{width:155px;height:155px}.score-ring:after{width:120px;height:120px}.score-text strong{font-size:34px}.breakdown{grid-template-columns:1fr 1fr;gap:8px}.break-card{padding:11px;font-size:13px}.review-list{padding:14px;border-radius:14px}.review-item summary{line-height:1.45}.toast{right:12px;left:12px;bottom:calc(116px + env(safe-area-inset-bottom));text-align:center}}
+@media(min-width:768px) and (max-width:1150px){body{min-width:0!important}.page{padding:20px}.hero-side{width:290px}.quiz-page{grid-template-columns:210px minmax(0,1fr) 200px}.quiz-actions{right:210px;left:200px}.question-text{font-size:19px}}
+@media(orientation:landscape) and (max-height:520px) and (max-width:950px){.topbar{position:static}.quiz-info{top:0}.quiz-sidebar{top:56px}.quiz-main{padding-bottom:120px}.quiz-actions{flex-direction:row}.action-group{flex:1}.modal{max-height:100dvh}}
+`;
+const loadScript=(src,attrs={})=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;Object.assign(s,attrs);s.onload=resolve;s.onerror=()=>reject(new Error('Failed loading '+src));document.head.appendChild(s)});
+try{
+ const stamp=Date.now();
+ const r=await fetch('release.json?t='+stamp,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
+ if(!r.ok)throw new Error('Release manifest unavailable: '+r.status);
+ const release=await r.json();
+ document.getElementById('version').textContent='גרסה '+release.version+' · '+release.questionCount+' שאלות · מותאם לנייד';
+ window.__APP_CHUNKS=[];
+ for(let i=0;i<release.chunks;i++)await loadScript(release.path+'/chunk-'+i+'.js?v='+encodeURIComponent(release.version)+'-'+stamp);
+ const b=window.__APP_CHUNKS.join('');
+ if(window.__APP_CHUNKS.length!==release.chunks||!b)throw new Error('Application data incomplete');
+ const u=Uint8Array.from(atob(b),c=>c.charCodeAt(0));
+ const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',u))).map(x=>x.toString(16).padStart(2,'0')).join('');
+ if(h!==release.sha256)throw new Error('Integrity check failed');
+ let text;
+ if('DecompressionStream' in window){
+   const stream=new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'));
+   text=await new Response(stream).text();
+ }else{
+   await loadScript('https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako_inflate.min.js',{crossOrigin:'anonymous'});
+   if(!window.pako)throw new Error('הדפדפן אינו תומך בפענוח האפליקציה');
+   text=window.pako.ungzip(u,{to:'string'});
+ }
+ text=text.replace(/<meta name="viewport"[^>]*>/i,'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">');
+ text=text.replace('</head>','<meta name="theme-color" content="#232f3e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="format-detection" content="telephone=no"><style id="mobile-overrides">'+mobileCSS+'</style></head>');
+ text=text.replace('סימולטור הכנה למחשב •','סימולטור הכנה למחשב ולנייד •');
+ document.open();document.write(text);document.close();
+}catch(e){fail(e)}
+})();
+</script>
+</body>
+</html>
